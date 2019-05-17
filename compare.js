@@ -43,7 +43,7 @@ regionSelect.onchange = function() {
 
 yearsList = []
 
-d3.csv("http://people.cs.vt.edu/~bijaya/epideep-live/NationalILINet.csv", function(error, data) {
+d3.csv("https://raw.githubusercontent.com/epideep/epideep.github.io/master/NationalILINet.csv", function(error, data) {
     
     data.forEach(function(d) {
         var date = parseDate(d['WEEK'] + "-" + d['YEAR'])
@@ -199,9 +199,9 @@ function drawAllData(season, region, drawAxis) {
 
     // all regions
     if (region === -1) {
-        csv_filename = "http://people.cs.vt.edu/~bijaya/epideep-live/NationalILINet.csv"
+        csv_filename = "https://raw.githubusercontent.com/epideep/epideep.github.io/master/NationalILINet.csv"
     } else {
-        csv_filename = "http://people.cs.vt.edu/~bijaya/epideep-live/RegionalILINet.csv"
+        csv_filename = "https://raw.githubusercontent.com/epideep/epideep.github.io/master/RegionalILINet.csv"
     }
 
     var line = d3.line()
