@@ -1,6 +1,6 @@
 // Set the dimensions of the canvas / graph
-var margin = {top: 30, right: 20, bottom: 30, left: 50},
-    width = 1100 - margin.left - margin.right,
+var margin = {top: 20, right: 20, bottom: 20, left: 40},
+    width = 1000 - margin.left - margin.right,
     height = 600 - margin.top - margin.bottom;
 
 // Parse the date / time
@@ -21,8 +21,7 @@ var valueline = d3.line()
     .y(function(d) { return y(d.ILI); });
     
 // Adds the svg canvas
-var svg = d3.select("body")
-    .append("svg")
+var svg = d3.select("#graphID")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
     .append("g")
@@ -43,7 +42,8 @@ regionSelect.onchange = function() {
 
 yearsList = []
 
-d3.csv("https://raw.githubusercontent.com/epideep/epideep.github.io/master/NationalILINet.csv", function(error, data) {
+d3.text("NationalILINet.csv").then(function(data){
+    data = d3.csvParse(data.split('\n').slice(1).join('\n'));
     
     data.forEach(function(d) {
         var date = parseDate(d['WEEK'] + "-" + d['YEAR'])
@@ -64,13 +64,7 @@ d3.csv("https://raw.githubusercontent.com/epideep/epideep.github.io/master/Natio
             newCheckboxLabel.innerHTML = yearsList[year].toString() + "-" + (yearsList[year]+1).toString() + " ";
             newCheckboxLabel.htmlFor = "checkbox" + yearsList[year].toString();
 
-            var season_div
-
-            if (yearsList[year] <= 2007) {
-                season_div = document.getElementById("seasons_checkboxes");
-            } else {
-                season_div = document.getElementById("seasons_checkboxes2");
-            }
+            var season_div = document.getElementById("seasons_checkboxes");
 
             season_div.appendChild(newCheckboxLabel);
             season_div.appendChild(document.createElement("br"));
@@ -93,7 +87,7 @@ bisectDate = d3.bisector(function(d) { return d.date; }).left;
 
 regionColors = {
     "-1": "#00ffff",
-    "1": "#ff00ff",
+    "1": "#ff001f",
     "2": "#9932cc",
     "3": "#00ff00",
     "4": "#0000ff",
@@ -195,26 +189,23 @@ Colors.names = {
 var yMax = 0;
 
 function drawAllData(season, region, drawAxis) {
-    // svg.selectAll("*").remove();
 
     // all regions
     if (region === -1) {
-        csv_filename = "https://raw.githubusercontent.com/epideep/epideep.github.io/master/NationalILINet.csv"
+        csv_filename = "NationalILINet.csv"
     } else {
-        csv_filename = "https://raw.githubusercontent.com/epideep/epideep.github.io/master/RegionalILINet.csv"
+        csv_filename = "RegionalILINet.csv"
     }
 
     var line = d3.line()
     .x(function(d) { return x(d.year); })
     .y(function(d) { return y(d.value); });
 
-    // TODO: deal with the csv header, which currently must be manually deleted from the file
-    d3.csv(csv_filename, function(error, data) {
+    d3.text(csv_filename).then(function(data){
+        data = d3.csvParse(data.split('\n').slice(1).join('\n'));
 
         data = data.filter(function(row) {
-            if (row['REGION'] === 'Region ' + region.toString() || row['REGION'] === 'X') {
-                return row
-            }
+            return row['REGION'] === 'Region ' + region.toString() || row['REGION'] === 'X'
         });
 
         data.forEach(function(d) {
@@ -248,7 +239,6 @@ function drawAllData(season, region, drawAxis) {
             var lineColor = regionColors[region.toString()];
         } else {
             var lineColor = seasonColors[season - 1997];
-            console.log(season)
         }
 
         // Add the valueline path.
@@ -298,7 +288,7 @@ function drawAllData(season, region, drawAxis) {
         focus.append("text")
             .attr("x", 15)
               .attr("dy", ".31em");
-    
+
         svg.append("rect")
             // .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
             .attr("class", "overlay")

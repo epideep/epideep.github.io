@@ -4,11 +4,6 @@
 
 body { font: 12px Arial;}
 
-path { 
-    stroke:steelblue;
-    stroke-width: 2;
-    fill: none;
-}
 
 .axis path,
 .axis line {
@@ -23,7 +18,6 @@ path {
   stroke-width: 2px;
   stroke-dasharray: 3,3;
 }
-
 svg {
     display: block;
     margin: auto;
@@ -35,17 +29,22 @@ svg {
 
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+
 <!-- jQuery library -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<!-- bootstrap -->
+
+<!-- Latest compiled JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    
 <!-- load the d3.js library -->    
 <script src="https://d3js.org/d3.v5.min.js"></script>
 
 <div class="container text-center pagination-centered">
-    <div class="row"><h1>Explore Historical Data</h1></div>
+    <div class="row"><h1>EpiDeep Flu Prediction Model</h1></div>
     <div class="row">
         <div class="col-6">
+
+            <p>Click on a week on the x axis to view predictions.</p>
             <label for="regionSelect">Region</label>
             <select class="form-control" id="regionSelect">
                 <option value="-1">National</option>
@@ -62,12 +61,11 @@ svg {
             </select>
             <label for="regionSelect">Season</label>
             <select class="form-control" id="dateSelect">
-                <option value="-1">All Seasons</option>
+                
             </select>
         </div>
     </div>
 </div>
 
-
-<script src="explore.js"></script>
+<script src="predict.js"></script>
 </body>

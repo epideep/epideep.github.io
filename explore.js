@@ -1,5 +1,5 @@
 // Set the dimensions of the canvas / graph
-var margin = {top: 30, right: 20, bottom: 30, left: 50},
+var margin = {top: 20, right: 20, bottom: 20, left: 20},
     width = 1100 - margin.left - margin.right,
     height = 600 - margin.top - margin.bottom;
 
@@ -41,15 +41,16 @@ regionSelect.onchange = function() {
 
 yearsList = []
 
-d3.csv("https://raw.githubusercontent.com/epideep/epideep.github.io/master/NationalILINet.csv", function(error, data) {
-    
+d3.text("NationalILINet.csv").then(function(data){
+    data = d3.csvParse(data.split('\n').slice(1).join('\n'));
+
     data.forEach(function(d) {
         var date = parseDate(d['WEEK'] + "-" + d['YEAR'])
         if (yearsList.indexOf(date.getFullYear()) === -1) {
             yearsList.push(date.getFullYear());
         }
     });
-
+    
     for (var year in yearsList) {
         if (year < yearsList.length - 1) {
             var option = document.createElement("option");
@@ -58,7 +59,8 @@ d3.csv("https://raw.githubusercontent.com/epideep/epideep.github.io/master/Natio
             dateSelect.add(option);
         }
     }
-});
+  })
+
 
 bisectDate = d3.bisector(function(d) { return d.date; }).left;
 
@@ -69,26 +71,21 @@ function drawAllData(season, region) {
 
     // all regions
     if (region === -1) {
-        csv_filename = "https://raw.githubusercontent.com/epideep/epideep.github.io/master/NationalILINet.csv"
+        csv_filename = "NationalILINet.csv"
     } else {
-        csv_filename = "https://raw.githubusercontent.com/epideep/epideep.github.io/master/RegionalILINet.csv"
+        csv_filename = "RegionalILINet.csv"
     }
 
     var line = d3.line()
     .x(function(d) { return x(d.year); })
     .y(function(d) { return y(d.value); });
 
-    // TODO: deal with the csv header, which currently must be manually deleted from the file
-    d3.csv(csv_filename, function(error, data) {
-
+    d3.text(csv_filename).then(function(data){
+        data = d3.csvParse(data.split('\n').slice(1).join('\n')) 
+        
         data = data.filter(function(row) {
-            console.log('Region ' + region.toString())
-            if (row['REGION'] === 'Region ' + region.toString() || row['REGION'] === 'X') {
-                return row
-            }
+            return row['REGION'] === 'Region ' + region.toString() || row['REGION'] === 'X'
         });
-
-        console.log(data)
 
         data.forEach(function(d) {
 
