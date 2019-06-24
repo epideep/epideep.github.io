@@ -1,10 +1,8 @@
 
 
 #footer {
-	top: 28px;
-	left: 135px;
 	width: 300px;
-	margin-left: 230px;
+	margin:0 auto;
 	font-size: 0.8em;
 	margin-top: 30px;
 }
